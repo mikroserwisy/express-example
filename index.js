@@ -1,6 +1,6 @@
 const express = require('express');
-const messagesRouter = require('./routes/messages');
-const usersRouter = require('./routes/users');
+const messagesRouter = require('./messages/messages-router');
+const usersRouter = require('./users/users-router');
 const { logger, onNotFoundExceptionHandler } = require("./utils");
 
 const app = express();
