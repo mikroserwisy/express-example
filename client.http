@@ -1,6 +1,8 @@
 GET http://localhost:3000/messages
 Accept: application/json
 Accept-Encoding: gzip
+#Authorization: Basic YnVja3k6c2llcnJh
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJ1Y2t5IiwiaWQiOiIzIiwicm9sZSI6InVzZXIiLCJpYXQiOjE2MjgyNTIxMjQsImV4cCI6MTYyODMzODUyNH0._FdRd1OYbDdhbCfBiiS37X1NnqDmkAS_06eswOvBHVY
 Content-Type: application/json
 
 ###
@@ -68,3 +70,14 @@ Content-Type: image/jpeg
 
 <./cover.jpg
 --WebAppBoundry
+
+###
+
+POST http://localhost:3000/security
+Accept: application/json
+Content-Type: application/json
+
+{
+  "username": "bucky",
+  "password": "sierra"
+}

@@ -3,6 +3,7 @@ const { parseJson } = require("../utils");
 const multer = require('multer');
 const path = require("path");
 const messagesService = require("./messages-service");
+const security = require("../security/security-router");
 const router = express.Router();
 
 const getMessages = (request, response) => {
@@ -51,6 +52,7 @@ const Storage = multer.diskStorage({
 //const uploadAttachment = multer({ dest: path.join(__dirname, '../upload') });
 const uploadAttachment = multer({ storage: Storage });
 
+router.use(security.requireAuth);
 router.route('/')
     .get(getMessages)
     .post(parseJson, uploadAttachment.array('attachments', 3), addMessage);

@@ -1,5 +1,5 @@
 const messages = require("../data/messages.json");
-const { NotFound, generateId, notFoundHandler} = require("../utils");
+const { NotFound, generateId} = require("../utils");
 
 const getAll = () => messages;
 
