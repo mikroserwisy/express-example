@@ -1,5 +1,5 @@
 const messages = require('../data/messages.json');
-const { notFoundHandler, parseBody, generateId } = require('../utils');
+const { notFoundHandler, generateId, NotFound, parseJson} = require('../utils');
 const express = require("express");
 
 const getMessages = (request, response) => {
@@ -9,28 +9,26 @@ const getMessages = (request, response) => {
 const getMessage = (request, response) => {
     const message = messages.find(message => message.id === request.params.id);
     if (!message) {
-        notFoundHandler(request, response)
+        throw new NotFound();
     } else {
         response.send(message);
     }
 };
 
-const addMessage = async (request, response) => {
-    const body = await parseBody(request);
-    const message = { ...JSON.parse(body), id: generateId() }
+const addMessage = (request, response) => {
+    const message = { ...request.body, id: generateId() }
     messages.push(message);
     response.status(201);
     response.setHeader('Location', `/message/${message.id}`);
     response.end();
 };
 
-const updateMessage = async (request, response) => {
-    const body = await parseBody(request);
+const updateMessage = (request, response) => {
     const message = messages.find(message => message.id === request.params.id);
     if (!message) {
         notFoundHandler(request, response)
     } else {
-        Object.assign(message, JSON.parse(body));
+        Object.assign(message, request.body);
         response.send(message);
     }
 };
@@ -38,7 +36,7 @@ const updateMessage = async (request, response) => {
 const deleteMessage = async (request, response) => {
     const index = messages.findIndex(message => message.id === request.params.id);
     if (index === -1) {
-        notFoundHandler(request, response)
+        throw new NotFound();
     } else {
         messages.splice(index, 1);
         response.sendStatus(204);
@@ -52,11 +50,11 @@ const getMessagesForUsers = (request, response) => {
 const router = express.Router();
 router.route('/')
     .get(getMessages)
-    .post(addMessage);
+    .post(parseJson, addMessage);
 
 router.route('/:id')
     .get(getMessage)
-    .patch(updateMessage)
+    .patch(parseJson, updateMessage)
     .delete(deleteMessage);
 
 router.get('/from/:sender/to/:recipient', getMessagesForUsers);
