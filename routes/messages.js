@@ -35,7 +35,7 @@ const updateMessage = async (request, response) => {
     }
 };
 
-const deleteMessage = async (request, response) => {
+const deleteMessage = (request, response) => {
     const index = messages.findIndex(message => message.id === request.params.id);
     if (index === -1) {
         notFoundHandler(request, response)
