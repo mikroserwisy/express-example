@@ -4,6 +4,8 @@ services:
     image: landrzejewski/app
     environment:
       TOKEN_SIGNATURE: "symmetrickey"
+      MONGODB_USER: 'admin'
+      MONGODB_PASSORD: 'admin'
     ports:
       - "3000:8080"
   mongo:

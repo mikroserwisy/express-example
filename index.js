@@ -11,39 +11,37 @@ const {authorize, rolePolicy} = require("./utils/security");
 const helmet = require('helmet');
 const env = require('./env');
 const { loggingMiddleware, logger } = require("./utils/logging");
+const { connectToMongoDB } = require("./utils/database");
 
-const app = express();
-app.use(helmet.contentSecurityPolicy({
-    useDefaults: true, directives: {
-        "frame-src": ["https://player.vimeo.com/"],
-        "img-src": "'self' data: https://i.vimeocdn.com/"
-    }
-}));
-app.use(helmet.dnsPrefetchControl());
-app.use(helmet.expectCt());
-app.use(helmet.frameguard());
-app.use(helmet.hidePoweredBy());
-app.use(helmet.hsts());
-app.use(helmet.ieNoOpen());
-app.use(helmet.noSniff());
-app.use(helmet.permittedCrossDomainPolicies());
-app.use(helmet.referrerPolicy());
-app.use(helmet.xssFilter());
-app.use(compression({level: 9, filter: () => true }));
-app.use(loggingMiddleware);
-app.use(serveStatic(path.join(__dirname, 'public')));
-app.use('/security', security.securityRouter);
-app.use(security.basicAuth)
-app.use(security.tokenAuth)
-app.use('/upload', serveStatic(path.join(__dirname, 'upload')));
-app.use('/messages', authorize(rolePolicy('user')), messagesRouter);
-app.use('/users', usersRouter);
-app.use(onNotFoundExceptionHandler);
+const startServer = () => {
+    const app = express();
+    app.use(helmet.contentSecurityPolicy({
+        useDefaults: true, directives: {
+            "frame-src": ["https://player.vimeo.com/"],
+            "img-src": "'self' data: https://i.vimeocdn.com/"
+        }
+    }));
+    app.use(helmet.dnsPrefetchControl());
+    app.use(helmet.expectCt());
+    app.use(helmet.frameguard());
+    app.use(helmet.hidePoweredBy());
+    app.use(helmet.hsts());
+    app.use(helmet.ieNoOpen());
+    app.use(helmet.noSniff());
+    app.use(helmet.permittedCrossDomainPolicies());
+    app.use(helmet.referrerPolicy());
+    app.use(helmet.xssFilter());
+    app.use(compression({level: 9, filter: () => true }));
+    app.use(loggingMiddleware);
+    app.use(serveStatic(path.join(__dirname, 'public')));
+    app.use('/security', security.securityRouter);
+    app.use(security.basicAuth)
+    app.use(security.tokenAuth)
+    app.use('/upload', serveStatic(path.join(__dirname, 'upload')));
+    app.use('/messages', authorize(rolePolicy('user')), messagesRouter);
+    app.use('/users', usersRouter);
+    app.use(onNotFoundExceptionHandler);
+    app.listen(env.port, () => logger.info('Listening on port 3000'));
+};
 
-//console.log(Buffer.from('bucky:sierra').toString('base64'));
-
-//const saltRounds = 10;
-//const hashedPassword = bcrypt.hash('sierra', saltRounds).then((password) => console.log(password));
-
-app.listen(env.port, () => logger.info('Listening on port 3000'));
-
+connectToMongoDB().then(startServer, logger.error);

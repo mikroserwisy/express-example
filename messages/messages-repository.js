@@ -1,5 +1,6 @@
 const messages = require("../data/messages.json");
 const { NotFound, generateId} = require("../utils/security");
+const { db } = require('../utils/database');
 
 const getAll = () => messages;
 
