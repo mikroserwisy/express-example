@@ -1,5 +1,5 @@
 [
   { "id": "1", "username": "nybblr", "name": "Jonathan", "password": "alps" },
   { "id": "2", "username": "flurry", "name": "Shawnee", "password": "redwood" },
-  { "id": "3", "username": "bucky", "name": "Alex", "password": "$2b$10$YtkSWDIdOn810.H9nfWAZ.6.weCwD9n6yE6QE2oMQ4QPdq4ZqWc5q" }
+  { "id": "3", "username": "bucky", "name": "Alex", "password": "$2b$10$YtkSWDIdOn810.H9nfWAZ.6.weCwD9n6yE6QE2oMQ4QPdq4ZqWc5q", "roles": ["user"] }
 ]
