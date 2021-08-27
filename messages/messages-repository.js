@@ -1,8 +1,11 @@
 const messages = require("../data/messages.json");
 const { NotFound, generateId} = require("../utils/security");
-const { db } = require('../utils/database');
+const { getDb } = require('../utils/database');
 
-const getAll = () => messages;
+const getAll = () => {
+    console.log(getDb());
+    return messages;
+}
 
 const getById = (id) => {
     const message = messages.find(message => message.id === id);

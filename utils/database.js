@@ -13,4 +13,4 @@ async function connectToMongoDB() {
     db = client.db(env.mongodbDatabase);
 }
 
-module.exports = { connectToMongoDB, db };
+module.exports = { connectToMongoDB, getDb: () => db };

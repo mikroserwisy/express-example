@@ -2,7 +2,7 @@ GET http://localhost:3000/messages
 Accept: application/json
 Accept-Encoding: gzip
 #Authorization: Basic YnVja3k6c2llcnJh
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJ1Y2t5Iiwicm9sZXMiOlsidXNlciJdLCJpYXQiOjE2MzAwNTkzOTcsImV4cCI6MTYzMDA2Mjk5N30.x4R7cPMLNHv8B0XnyWl6CbKCCXGFbJzgDnEUwYoE9WY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJ1Y2t5Iiwicm9sZXMiOlsidXNlciJdLCJpYXQiOjE2MzAwNjg4NzAsImV4cCI6MTYzMDA3MjQ3MH0.oJgEDzUZuFGGZpCKBwMteHw-CBi43ZL0PUk5wbr09ws
 Content-Type: application/json
 
 ###
