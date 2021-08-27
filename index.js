@@ -9,6 +9,7 @@ const security = require('./utils/security')
 const { logger, onNotFoundExceptionHandler } = require("./utils/utils");
 const {authorize, rolePolicy} = require("./utils/security");
 const helmet = require('helmet');
+const env = require('./env');
 
 const app = express();
 app.use(helmet.contentSecurityPolicy({
@@ -43,5 +44,5 @@ app.use(onNotFoundExceptionHandler);
 //const saltRounds = 10;
 //const hashedPassword = bcrypt.hash('sierra', saltRounds).then((password) => console.log(password));
 
-app.listen(3000, () => console.log('Listening on port 3000'));
+app.listen(env.port, () => console.log('Listening on port 3000'));
 

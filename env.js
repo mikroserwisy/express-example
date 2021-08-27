@@ -1,10 +1,11 @@
 const development = {
     tokenSignature: 'symmetrickey',
-    https: true
+    port: 3000,
 };
 
 const production = {
-    tokenSignature: 'sadfkiu23r34bnrjkbqfqwekjk'
+    tokenSignature: process.env.TOKEN_SIGNATURE,
+    port: 8080
 };
 
 const env = process.env.NODE_ENV !== 'production' ? development : Object.assign({}, development, production);

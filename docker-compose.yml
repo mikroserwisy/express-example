@@ -1,5 +1,11 @@
 version: '3'
 services:
+  app:
+    image: landrzejewski/app
+    environment:
+      TOKEN_SIGNATURE: "symmetrickey"
+    ports:
+      - "3000:8080"
   mongo:
     image: mongo
     ports:
