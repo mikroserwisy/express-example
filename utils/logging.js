@@ -1,6 +1,6 @@
-import winston from 'winston';
-import expressWinston from 'express-winston';
-import env from '../../env';
+const winston = require('winston');
+const expressWinston = require('express-winston');
+const env = require('../env');
 
 const mainFile = `${env.logsDirectory}/main.log`;
 const errorsFile = `${env.logsDirectory}/errors.log`;
@@ -43,4 +43,4 @@ const loggingMiddleware = expressWinston.logger({
     expressFormat: true
 });
 
-export {logger, loggingMiddleware};
+module.exports = {logger, loggingMiddleware};
