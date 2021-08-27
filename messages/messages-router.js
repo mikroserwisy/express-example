@@ -1,9 +1,9 @@
 const express = require("express");
-const { parseJson } = require("../utils");
+const { parseJson } = require("../utils/utils");
 const multer = require('multer');
 const path = require("path");
 const messagesService = require("./messages-service");
-const security = require("../security/security-router");
+const security = require("../utils/security");
 const router = express.Router();
 
 const getMessages = (request, response) => {

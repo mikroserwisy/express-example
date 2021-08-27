@@ -5,10 +5,10 @@ const serveStatic = require('serve-static');
 const path = require("path");
 const messagesRouter = require('./messages/messages-router');
 const usersRouter = require('./users/users-router');
-const security = require('./security/security-router')
-const { logger, onNotFoundExceptionHandler } = require("./utils");
-const {authorize, rolePolicy} = require("./security/security-router");
-const helmet = 'helmet';
+const security = require('./utils/security')
+const { logger, onNotFoundExceptionHandler } = require("./utils/utils");
+const {authorize, rolePolicy} = require("./utils/security");
+const helmet = require('helmet');
 
 const app = express();
 app.use(helmet.contentSecurityPolicy({
@@ -34,7 +34,7 @@ app.use('/security', security.securityRouter);
 app.use(security.basicAuth)
 app.use(security.tokenAuth)
 app.use('/upload', serveStatic(path.join(__dirname, 'upload')));
-app.use('/messages', authorize(rolePolicy('admin')), messagesRouter);
+app.use('/messages', authorize(rolePolicy('user')), messagesRouter);
 app.use('/users', usersRouter);
 app.use(onNotFoundExceptionHandler);
 

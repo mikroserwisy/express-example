@@ -2,8 +2,8 @@ const usersRepository = require('../users/users-repository');
 const bcrypt = require('bcrypt');
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const { tokenSignature } = require('../config');
-const { parseJson, NotFound} = require("../utils");
+const env = require('../env');
+const { parseJson } = require("./utils");
 
 const basicAuth = async (request, response, next) => {
   const authorizationHeader = request.headers.authorization || '';
@@ -28,7 +28,7 @@ const tokenAuth = (request, response, next) => {
   const [type, token] = authorizationHeader.split(' ');
   if (type === 'Bearer') {
     try {
-      const payload = jwt.verify(token, tokenSignature);
+      const payload = jwt.verify(token, env.tokenSignature);
       if (payload.roles === undefined) {
           response.sendStatus(401);
           return;
@@ -66,7 +66,7 @@ const authenticate = async (request, response) => {
   let user, validator;
   if (credentials.refreshToken) {
       validator = () => {
-          const payload = jwt.verify(credentials.refreshToken, tokenSignature);
+          const payload = jwt.verify(credentials.refreshToken, env.tokenSignature);
           user = usersRepository.getByUsername(payload.username);
           return user !== undefined;
       }
@@ -101,8 +101,8 @@ const rolePolicy = (roleName) => (principal) => principal.roles.indexOf(roleName
 
 const generateTokens = (username, roles) => {
     const options = { expiresIn: '3600s' };
-    const refreshToken = jwt.sign({ username }, tokenSignature, options);
-    const token = jwt.sign({ username, roles }, tokenSignature, options);
+    const refreshToken = jwt.sign({ username }, env.tokenSignature, options);
+    const token = jwt.sign({ username, roles }, env.tokenSignature, options);
     return { token, refreshToken };
 };
 

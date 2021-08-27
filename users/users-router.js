@@ -1,5 +1,5 @@
 const users = require('../data/users.json');
-const { notFoundHandler } = require('../utils');
+const { notFoundHandler } = require('../utils/security');
 const express = require("express");
 
 const getUsers = (request, response) => {
