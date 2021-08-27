@@ -5,8 +5,6 @@ const path = require("path");
 const messagesRouter = require('./messages/messages-router');
 const usersRouter = require('./users/users-router');
 const { logger, onNotFoundExceptionHandler } = require("./utils");
-const {request} = require("express");
-
 
 const app = express();
 app.use(compression({level: 9, filter: () => true }));
