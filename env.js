@@ -1,5 +1,6 @@
 const development = {
     tokenSignature: 'symmetrickey',
+    logsDirectory: `./logs`,
     port: 3000,
 };
 

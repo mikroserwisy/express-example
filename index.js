@@ -6,10 +6,11 @@ const path = require("path");
 const messagesRouter = require('./messages/messages-router');
 const usersRouter = require('./users/users-router');
 const security = require('./utils/security')
-const { logger, onNotFoundExceptionHandler } = require("./utils/utils");
+const { onNotFoundExceptionHandler } = require("./utils/utils");
 const {authorize, rolePolicy} = require("./utils/security");
 const helmet = require('helmet');
 const env = require('./env');
+const { loggingMiddleware, logger } = require("./utils/logging");
 
 const app = express();
 app.use(helmet.contentSecurityPolicy({
@@ -29,7 +30,7 @@ app.use(helmet.permittedCrossDomainPolicies());
 app.use(helmet.referrerPolicy());
 app.use(helmet.xssFilter());
 app.use(compression({level: 9, filter: () => true }));
-app.use(logger);
+app.use(loggingMiddleware);
 app.use(serveStatic(path.join(__dirname, 'public')));
 app.use('/security', security.securityRouter);
 app.use(security.basicAuth)
@@ -44,5 +45,5 @@ app.use(onNotFoundExceptionHandler);
 //const saltRounds = 10;
 //const hashedPassword = bcrypt.hash('sierra', saltRounds).then((password) => console.log(password));
 
-app.listen(env.port, () => console.log('Listening on port 3000'));
+app.listen(env.port, () => logger.info('Listening on port 3000'));
 
