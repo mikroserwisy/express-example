@@ -13,7 +13,7 @@ const basicAuth = async (request, response, next) => {
     const [username, password] = credentials.split(':');
     const user = usersRepository.getByUsername(username);
     if (user && await bcrypt.compare(password, user.password)) {
-      request.principal = user;
+      response.locals.principal = user;
       next();
     } else {
       response.sendStatus(401);
@@ -29,9 +29,10 @@ const tokenAuth = (request, response, next) => {
   if (type === 'Bearer') {
     try {
       const payload = jwt.verify(token, tokenSignature);
+
       const user = usersRepository.getByUsername(payload.username);
       if (user) {
-        request.principal = user;
+        response.locals.principal = user;
         next();
         return;
       }
@@ -46,32 +47,54 @@ const tokenAuth = (request, response, next) => {
 };
 
 const requireAuth = (request, response, next) => {
-  if (request.principal) {
+  if (response.locals.principal) {
     next();
   } else {
     response.sendStatus(401);
   }
 };
 
-const createToken = async (request, response) => {
+const authenticate = async (request, response) => {
   const credentials = request.body;
-  const user = usersRepository.getByUsername(credentials.username);
-  if (user && await bcrypt.compare(credentials.password, user.password)) {
-    const token = jwt.sign({ 'username' : credentials.username, id: user.id, role: 'user' }, tokenSignature, { expiresIn: '1d' });
-    response.send(token);
-    response.end();
+  if (credentials.refreshToken) {
+      try {
+          const payload = jwt.verify(credentials.refreshToken, tokenSignature);
+          const user = usersRepository.getByUsername(payload.username);
+          if (user) {
+              response.send(generateTokens(user.name));
+              response.end();
+          } else {
+              response.sendStatus(401);
+          }
+      } catch (error) {
+          response.sendStatus(401);
+          return;
+      }
   } else {
-    response.sendStatus(401);
+      const user = usersRepository.getByUsername(credentials.username);
+      if (user && await bcrypt.compare(credentials.password, user.password)) {
+          response.send(generateTokens(user.name));
+          response.end();
+      } else {
+          response.sendStatus(401);
+      }
   }
 }
 
+const generateTokens = (username) => {
+    const options = { expiresIn: '1m' };
+    const token = jwt.sign({ 'username' : username, roles: ['user'] }, tokenSignature, options);
+    const refreshToken = jwt.sign({ 'username' : username }, tokenSignature, options);
+    return { token, refreshToken, expiresIn: options.expiresIn };
+};
+
 const router = express.Router();
-router.post('/', parseJson, createToken);
+router.post('/', parseJson, authenticate);
 
 module.exports = {
   basicAuth,
   tokenAuth,
   requireAuth,
-  createToken,
+  createToken: authenticate,
   securityRouter: router
 };
